@@ -14,7 +14,6 @@ export default class DarkMode {
         $label.appendChild($checkBox);
         $label.appendChild($text);
         this.setEvent();
-        this.render();
     }
 
     setEvent() {
@@ -36,6 +35,4 @@ export default class DarkMode {
             }
         });
     }
-
-    render() { }
 }

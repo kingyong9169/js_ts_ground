@@ -19,14 +19,14 @@ export default class ImageInfo {
         if(className === "ImageInfo" || className === "close")
           this.fadeOut(this.$imageInfo);
       });
-  
-      window.onkeyup = (e) => {
-        const key = e.keyCode ? e.keyCode : e.which;
+      this.$imageInfo.addEventListener('keyup', (e) => { // Todo: 윈도우 전체가 이벤트가 걸림. 수정 필요.
+        const key = e.keyCode ? e.keyCode : e.which; // 알아보기: e.which
+        console.log(key);
         if(key === 27){
           if(this.$imageInfo.style.display === 'block')
             this.fadeOut(this.$imageInfo);
         }
-      }
+      });
     }
   
     setState(nextData) {
@@ -38,9 +38,9 @@ export default class ImageInfo {
       element.style.display = 'block';
     }
   
-    fadeOut(element) {
+    fadeOut(element) { // 버그
       element.classList.add("fade");
-      if(!element.style.opacity) element.style.display = 'none';
+      element.style.display = 'none';
     }
   
     remove() {
@@ -48,7 +48,7 @@ export default class ImageInfo {
     }
   
     render() {
-      if (this.data.visible) {
+      if(this.data.visible) {
         this.$imageInfo.classList.remove("fade");
         const { name, url, temperament, origin } = this.data.image;
   
@@ -56,12 +56,12 @@ export default class ImageInfo {
           <div class="content-wrapper">
             <div class="title">
               <span>${name}</span>
-              <button class="close">x</button>
+              <button class="close" type="button">x</button>
             </div>
-            <img src="${url}" alt="${name}"/>
+            <img src="${url}" alt="${name}" />
             <div class="description">
-              <p>성격: ${temperament}</p>
-              <p>태생: ${origin}</p>
+              <span>성격: ${temperament}</span>
+              <span>태생: ${origin}</span>
             </div>
           </div>`;
         this.fadeIn(this.$imageInfo);

@@ -10,7 +10,6 @@ export default class SearchResult {
   
       this.data = initialData;
       this.onClick = onClick;
-  
       this.render();
       this.setEvent();
     }
@@ -39,7 +38,7 @@ export default class SearchResult {
           )
           .join("");
   
-        this.$searchResult.querySelectorAll(".item").forEach(($item, index) => {
+        this.$searchResult.querySelectorAll(".item").forEach(($item, index) => { // Todo: 이벤트 위임
           $item.addEventListener("click", (e) => {
             e.preventDefault();
             this.onClick(this.data[index]);

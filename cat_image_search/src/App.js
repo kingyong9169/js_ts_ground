@@ -11,6 +11,25 @@ export default class App {
 
   constructor($target) {
     this.$target = $target;
+    this.newSearchInput($target);
+    
+    const keyWords = JSON.parse(localStorage.getItem("keywords"));
+    if(keyWords.length) {
+      this.searchInput.getLastInputInfo(keyWords[keyWords.length - 1]);
+    }
+  }
+
+  setState(nextData) {
+    this.data = nextData;
+    this.searchResult.setState(nextData);
+  }
+
+  removeLoadingBoxes($target) {
+    const $loadingBoxes = document.querySelectorAll('.loadingBox'); // Todo 로딩을 감싸는 div를 만들어서 그것만 지우는것이 좋다.
+    $loadingBoxes.forEach(x => $target.removeChild(x));
+  }
+
+  newSearchInput($target) {
     this.searchInput = new SearchInput({
       $target,
       onSearch: async (keyword, isRandom) => {
@@ -20,7 +39,7 @@ export default class App {
             this.imageInfo.remove();
           }
           if(this.error) this.error.removeError();
-          this.loading = new Loading($target);
+          this.loading = new Loading($target); // api 요청했을 때 로딩 한 번만 뜨게 하기
           const { data } = isRandom ? await api.randomSearch() : await api.fetchCats(keyword);
           this.removeLoadingBoxes($target);
           this.newSearchResult($target);
@@ -32,16 +51,6 @@ export default class App {
         }
       },
     });
-  }
-
-  setState(nextData) {
-    this.data = nextData;
-    this.searchResult.setState(nextData);
-  }
-
-  removeLoadingBoxes($target) {
-    const $loadingBoxes = document.querySelectorAll('.loadingBox');
-    $loadingBoxes.forEach(x => $target.removeChild(x));
   }
 
   newSearchResult($target) {

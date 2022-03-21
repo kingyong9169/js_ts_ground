@@ -121,7 +121,6 @@
   @media (max-width: 576px) {
     .SearchResult {
       grid-template-columns: repeat(1, minmax(250px, 1fr));
-      grid-gap: 0;
     }
     .ImageInfo .content-wrapper {
       width: 100%;

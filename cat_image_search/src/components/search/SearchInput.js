@@ -3,6 +3,7 @@ import DarkMode from "../DarkMode.js";
 export default class SearchInput {
   keyWords = [];
   constructor({ $target, onSearch }) {
+    this.onSearch = onSearch;
     const $inputBox = document.createElement('header');
     $inputBox.className = 'inputBox';
 
@@ -13,6 +14,8 @@ export default class SearchInput {
     this.$searchInput.setAttribute('autofocus', true);
 
     this.$randomButton = document.createElement('button');
+    this.$randomButton.setAttribute("type", "button");
+    this.$randomButton.setAttribute("aria-label", "랜덤 검색"); // Todo: 접근성 생각해보기 aria-pressed, aria-has-popup
     this.$randomButton.className ='randomBtn';
     this.$randomButton.innerHTML = '랜덤 검색';
 
@@ -27,12 +30,12 @@ export default class SearchInput {
     $inputBox.appendChild(this.$keyWords);
     $target.appendChild($inputBox);
 
-    this.setEvent(onSearch);
+    this.setEvent();
     this.getKeyWords();
   }
 
-  setEvent(onSearch) {
-    this.$searchInput.addEventListener("mouseup", e => {
+  setEvent() {
+    this.$searchInput.addEventListener("click", e => {
       e.preventDefault();
       e.target.value = "";
     });
@@ -40,20 +43,24 @@ export default class SearchInput {
     this.$searchInput.addEventListener("keyup", async e => {
       if (e.keyCode === 13) {
         const key = e.target.value;
-        await onSearch(key, false);
+        await this.onSearch(key, false); // Todo: 메소드 분리
         await this.setKeyWords(key);
         await this.getKeyWords();
       }
     });
 
-    this.$randomButton.addEventListener('click', () => onSearch(null, true));
+    this.$randomButton.addEventListener('click', () => this.onSearch(null, true));
 
     this.$keyWords.addEventListener('click', async e => {
       const key = e.target.innerHTML;
-      await onSearch(key, false);
+      await this.onSearch(key, false); // Todo: 메소드 분리
       await this.setKeyWords(key);
       await this.getKeyWords();
     });
+  }
+
+  getLastInputInfo = async (keyword) => {
+    await this.onSearch(keyword, false);
   }
 
   setKeyWords(key) {
@@ -71,6 +78,7 @@ export default class SearchInput {
       this.keyWords = keyWords;
       for(let i = 0 ; i < this.keyWords.length ; i++) {
         const $keyWord = document.createElement("button");
+        $keyWord.setAttribute('type', "button");
         $keyWord.className = "keyWord";
         $keyWord.innerHTML = this.keyWords[i];
         this.$keyWords.appendChild($keyWord);
